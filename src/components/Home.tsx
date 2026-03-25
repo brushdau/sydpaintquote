@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Home as HomeIcon, Building2, Store, Warehouse, Fence, Sparkles } from 'lucide-react';
 
 interface HomeProps {
-  onNavigate: (page: 'home' | 'services', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'quote', sectionId?: string) => void;
 }
 
 export default function Home({ onNavigate }: HomeProps) {
@@ -95,7 +95,7 @@ export default function Home({ onNavigate }: HomeProps) {
           <span className="hero-h1-italic font-playfair text-[clamp(48px,8vw,92px)] font-bold italic text-gold-light block leading-[1.05] mb-10 tracking-tight">from Sydney's Best</span>
           <p className="hero-sub text-[18px] font-light text-white/90 leading-[1.75] max-w-[560px] mx-auto mb-11">Tell us about your painting job. We instantly match you with trusted, vetted local painters. Compare up to 3 quotes and save — completely free, no obligation.</p>
           <div className="hero-btns flex gap-3.5 justify-center flex-wrap mb-12">
-            <a onClick={() => onNavigate('home', 'cta')} className="btn-gold inline-flex items-center gap-2 bg-gold text-white rounded-lg px-[30px] py-3.5 text-[15px] font-medium transition-all hover:bg-gold-dark hover:-translate-y-0.5 cursor-pointer">Get Your Free Quote →</a>
+            <a onClick={() => onNavigate('quote')} className="btn-gold inline-flex items-center gap-2 bg-gold text-white rounded-lg px-[30px] py-3.5 text-[15px] font-medium transition-all hover:bg-gold-dark hover:-translate-y-0.5 cursor-pointer">Get Your Free Quote →</a>
             <a onClick={() => onNavigate('home', 'how')} className="btn-ghost inline-flex items-center gap-2 bg-transparent text-white border-2 border-white/55 rounded-lg px-[30px] py-3.5 text-[15px] font-normal transition-all hover:bg-white/12 cursor-pointer">How It Works</a>
           </div>
         </div>
@@ -250,7 +250,7 @@ export default function Home({ onNavigate }: HomeProps) {
         <div className="cta-inner relative z-10 max-w-[640px] mx-auto aos">
           <h2 className="cta-title font-playfair text-[clamp(36px,5.5vw,64px)] font-bold text-white mb-4.5 leading-[1.1]">Ready for Your Free Quote?</h2>
           <p className="cta-sub text-base text-white/80 leading-[1.7] mb-9.5">Join thousands of Sydney homeowners who have found their perfect painter through Brushd. It takes just 2 minutes.</p>
-          <a onClick={() => onNavigate('home', 'cta')} className="btn-gold bg-gold text-white rounded-lg px-9 py-4 text-base font-bold transition-all hover:bg-gold-dark hover:-translate-y-0.5 cursor-pointer">Get Your Free Quote Now →</a>
+          <a onClick={() => onNavigate('quote')} className="btn-gold bg-gold text-white rounded-lg px-9 py-4 text-base font-bold transition-all hover:bg-gold-dark hover:-translate-y-0.5 cursor-pointer">Get Your Free Quote Now →</a>
         </div>
       </section>
     </>

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Services from './components/Services';
+import QuoteForm from './components/QuoteForm';
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'services'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'services' | 'quote'>('home');
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function App() {
     return () => io.disconnect();
   }, [currentPage]);
 
-  const navigateTo = (page: 'home' | 'services', sectionId?: string) => {
+  const navigateTo = (page: 'home' | 'services' | 'quote', sectionId?: string) => {
     setCurrentPage(page);
     setIsMenuOpen(false);
     
@@ -63,8 +64,8 @@ export default function App() {
       {/* NAV */}
       <nav className={`fixed top-0 left-0 right-0 z-[200] h-[66px] flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-[#F5F0E8]/97 backdrop-blur-md shadow-none' 
-          : 'bg-transparent shadow-none'
+          ? 'bg-[#F5F0E8] shadow-sm' 
+          : 'bg-transparent'
       }`}>
         <a className="flex items-center gap-2.5 no-underline cursor-pointer" onClick={() => navigateTo('home')}>
           <div className="w-[38px] h-[38px] bg-[#C9962A] rounded-lg flex items-center justify-center shadow-[0_2px_8px_rgba(201,150,42,0.3)] overflow-hidden">
@@ -82,11 +83,11 @@ export default function App() {
             { id: 'services', label: 'Services' },
             { id: 'home', label: 'For Painters', section: 'how' },
             { id: 'home', label: 'FAQ', section: 'why' },
-            { id: 'home', label: 'Contact', section: 'cta' }
+            { id: 'quote', label: 'Contact' }
           ].map((link, index) => (
             <li key={`${link.id}-${index}`}>
               <a 
-                onClick={() => navigateTo(link.id as 'home' | 'services', link.section)} 
+                onClick={() => navigateTo(link.id as 'home' | 'services' | 'quote', link.section)} 
                 className={`no-underline text-[14.5px] transition-all duration-300 cursor-pointer font-medium px-4 py-2 rounded-full ${
                   (currentPage === link.id && (!link.section || link.section === 'home'))
                     ? (isScrolled ? 'bg-[#C9962A]/10 text-[#C9962A]' : 'bg-black/20 text-white')
@@ -98,7 +99,7 @@ export default function App() {
             </li>
           ))}
         </ul>
-        <a onClick={() => navigateTo('home', 'cta')} className="hidden md:inline-flex items-center bg-[#C9962A] text-white rounded-lg px-[22px] py-[11px] text-sm font-medium transition-all hover:bg-[#A07A1E] hover:-translate-y-px cursor-pointer">
+        <a onClick={() => navigateTo('quote')} className="hidden md:inline-flex items-center bg-[#C9962A] text-white rounded-lg px-[22px] py-[11px] text-sm font-medium transition-all hover:bg-[#A07A1E] hover:-translate-y-px cursor-pointer">
           Get Free Quote
         </a>
         <button 
@@ -169,7 +170,7 @@ export default function App() {
               </li>
               <li>
                 <a 
-                  onClick={() => navigateTo('home', 'cta')} 
+                  onClick={() => navigateTo('quote')} 
                   className="block p-3.5 text-[#4A3B28] font-medium cursor-pointer hover:bg-[#C9962A]/10 rounded-xl transition-all"
                 >
                   Contact
@@ -177,7 +178,7 @@ export default function App() {
               </li>
             </ul>
             <div className="p-4 pb-6">
-              <a onClick={() => navigateTo('home', 'cta')} className="block bg-gold text-white text-center p-4 rounded-lg font-bold cursor-pointer">Get Free Quote</a>
+              <a onClick={() => navigateTo('quote')} className="block bg-gold text-white text-center p-4 rounded-lg font-bold cursor-pointer">Get Free Quote</a>
             </div>
           </div>
         </div>
@@ -187,10 +188,13 @@ export default function App() {
       <main>
         {currentPage === 'home' ? (
           <Home onNavigate={navigateTo} />
-        ) : (
+        ) : currentPage === 'services' ? (
           <Services onNavigate={navigateTo} />
+        ) : (
+          <QuoteForm onNavigate={navigateTo} />
         )}
       </main>
+
 
       {/* FOOTER */}
       <footer className="bg-[#2A1F0E] text-white/65 py-16 px-12">
@@ -215,7 +219,7 @@ export default function App() {
             <ul className="list-none flex flex-col gap-2.5 p-0">
               <li><a onClick={() => navigateTo('home', 'how')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">How It Works</a></li>
               <li><a onClick={() => navigateTo('services')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Our Services</a></li>
-              <li><a onClick={() => navigateTo('home', 'cta')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Get Free Quote</a></li>
+              <li><a onClick={() => navigateTo('quote')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Get Free Quote</a></li>
               <li><a onClick={() => navigateTo('home', 'why')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">FAQ</a></li>
             </ul>
           </div>

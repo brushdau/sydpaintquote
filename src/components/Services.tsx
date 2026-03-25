@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { MapPin, Home as HomeIcon, Building2, Store, Check, Warehouse, Fence, Sparkles } from 'lucide-react';
 
 interface ServicesProps {
-  onNavigate: (page: 'home' | 'services', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'quote', sectionId?: string) => void;
 }
 
 export default function Services({ onNavigate }: ServicesProps) {
@@ -27,7 +27,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "Interior Painting",
       text: "Transform your living spaces with a fresh coat of paint. Our vetted interior painters cover bedrooms, living rooms, kitchens, bathrooms, hallways, and ceilings.",
-      img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80",
+      img: "/interior.png",
       icon: <span className="text-2xl">🏠</span>,
       subServices: [
         {
@@ -83,7 +83,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "Commercial Painting",
       text: "Minimal disruption, maximum results. Our commercial painters work around your schedule to deliver high-quality finishes for any business space.",
-      img: "https://images.unsplash.com/photo-1516216628859-9bccecab13ca?w=800&q=80",
+      img: "/commecial.jpg",
       icon: <span className="text-2xl">🏢</span>,
       subServices: [
         {
@@ -111,7 +111,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "Roof Painting",
       text: "Extend the life of your roof and boost curb appeal with professional roof painting. We cover all roof types across Sydney.",
-      img: "https://images.unsplash.com/photo-1635424710928-0544e8512eae?w=800&q=80",
+      img: "/roof.png",
       icon: <span className="text-2xl">🏠</span>,
       subServices: [
         {
@@ -139,7 +139,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "Deck & Fence Painting",
       text: "Restore and protect your outdoor timber surfaces. From classic decks to long fences, our painters deliver beautiful, lasting results.",
-      img: "https://images.unsplash.com/photo-1595814433015-e6f5cd69614e?w=800&q=80",
+      img: "/deck.png",
       icon: <span className="text-2xl">🌿</span>,
       subServices: [
         {
@@ -167,7 +167,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "New Home Painting",
       text: "Get your new home looking perfect from day one. Our painters work with builders and homeowners to deliver flawless finishes on new builds.",
-      img: "https://images.unsplash.com/photo-1503387762-592dec5832f2?w=800&q=80",
+      img: "/newhome.png",
       icon: <span className="text-2xl">🔑</span>,
       subServices: [
         {
@@ -255,7 +255,7 @@ export default function Services({ onNavigate }: ServicesProps) {
             From a single room to a full commercial project, we have specialist painters for every job across Sydney and surrounds.
           </p>
           <button 
-            onClick={() => onNavigate('home', 'cta')}
+            onClick={() => onNavigate('quote')}
             className="btn-gold px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest aos"
             style={{ transitionDelay: '0.3s' }}
           >
@@ -349,7 +349,7 @@ export default function Services({ onNavigate }: ServicesProps) {
           </div>
 
           <button 
-            onClick={() => onNavigate('home', 'cta')}
+            onClick={() => onNavigate('quote')}
             className="btn-gold px-12 py-5 rounded-lg font-bold text-lg inline-flex items-center gap-2"
           >
             Get Free Quotes in Your Area →
