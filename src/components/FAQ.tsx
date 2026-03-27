@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Minus, Home, Building2, Paintbrush, HelpCircle } from 'lucide-react';
 
 interface FAQProps {
-  onNavigate: (page: 'home' | 'services' | 'quote' | 'faq', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact', sectionId?: string) => void;
 }
 
 type Category = 'homeowners' | 'painters' | 'services' | 'general';
@@ -50,10 +50,22 @@ export default function FAQ({ onNavigate }: FAQProps) {
   };
 
   return (
-    <div className="bg-[#FDFCF9] min-h-screen pt-24">
+    <div className="bg-[#FDFCF9] min-h-screen">
+      {/* HERO SECTION */}
+      <section className="bg-[#151619] pt-32 pb-24 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <span className="text-[#C9962A] font-bold tracking-[3px] uppercase text-[11px] mb-4 block">FAQ</span>
+          <h1 className="font-playfair text-5xl md:text-6xl font-bold text-white mb-6">Frequently Asked Questions</h1>
+          <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+            Everything you need to know about PaintQuote Sydney.<br />
+            Can't find your answer? <button onClick={() => onNavigate('contact')} className="text-[#C9962A] hover:underline cursor-pointer">Contact our team</button>.
+          </p>
+        </div>
+      </section>
+
       {/* MAIN CONTENT */}
-      <section className="py-20 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12">
+      <section className="py-24 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-16">
           
           {/* SIDEBAR */}
           <aside className="space-y-2">
@@ -74,10 +86,10 @@ export default function FAQ({ onNavigate }: FAQProps) {
                   <span className={activeCategory === cat.id ? 'text-[#C9962A]' : 'text-[#7A6B54]'}>
                     {cat.icon}
                   </span>
-                  <span className="font-medium text-sm">{cat.label}</span>
+                  <span className="font-bold text-sm">{cat.label}</span>
                 </div>
-                <span className={`text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full ${
-                  activeCategory === cat.id ? 'bg-white text-[#C9962A]' : 'bg-gray-100 text-gray-400'
+                <span className={`text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full ${
+                  activeCategory === cat.id ? 'bg-white text-[#C9962A]' : 'bg-[#F5F0E8]/50 text-[#7A6B54]/50'
                 }`}>
                   {cat.count}
                 </span>
@@ -86,12 +98,12 @@ export default function FAQ({ onNavigate }: FAQProps) {
           </aside>
 
           {/* FAQ LIST */}
-          <div className="space-y-4">
-            <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-8 capitalize">
+          <div>
+            <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-8">
               {activeCategory === 'homeowners' ? 'For Homeowners' : activeCategory === 'painters' ? 'For Painters' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
             </h2>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               {faqs[activeCategory].map((faq, idx) => (
                 <div 
                   key={idx} 
@@ -99,35 +111,25 @@ export default function FAQ({ onNavigate }: FAQProps) {
                 >
                   <button
                     onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                    className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
+                    className="w-full flex items-center justify-between p-6 text-left cursor-pointer group"
                   >
-                    <span className="font-semibold text-[#1A1208] pr-8">{faq.q}</span>
+                    <span className="font-bold text-[#1A1208] pr-8">{faq.q}</span>
                     <span className="text-[#C9962A] shrink-0">
-                      {openIndex === idx ? <Minus size={20} className="transition-transform" /> : <Plus size={20} className="transition-transform" />}
+                      {openIndex === idx ? (
+                        <Minus size={20} className="transition-transform" />
+                      ) : (
+                        <Plus size={20} className="transition-transform group-hover:scale-110" />
+                      )}
                     </span>
                   </button>
                   
                   {openIndex === idx && (
-                    <div className="px-5 pb-5 text-[#7A6B54] text-sm leading-relaxed animate-fade-in">
+                    <div className="px-6 pb-6 text-[#7A6B54] text-sm leading-relaxed animate-fade-in">
                       {faq.a}
                     </div>
                   )}
                 </div>
               ))}
-            </div>
-
-            {/* STILL HAVE QUESTIONS */}
-            <div className="mt-12 bg-[#F5F0E8] rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <h3 className="text-xl font-bold text-[#1A1208] mb-2">Still have questions?</h3>
-                <p className="text-[#7A6B54] text-sm">Our Sydney team is here to help — reach out any time.</p>
-              </div>
-              <button 
-                onClick={() => onNavigate('quote')}
-                className="bg-[#C9962A] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-[#A07A1E] transition-all shadow-lg shadow-[#C9962A]/20"
-              >
-                Contact Us
-              </button>
             </div>
           </div>
         </div>

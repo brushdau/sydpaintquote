@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { MapPin, Home as HomeIcon, Building2, Store, Check, Warehouse, Fence, Sparkles } from 'lucide-react';
 
 interface ServicesProps {
-  onNavigate: (page: 'home' | 'services' | 'quote', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact', sectionId?: string) => void;
 }
 
 export default function Services({ onNavigate }: ServicesProps) {

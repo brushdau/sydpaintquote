@@ -5,9 +5,11 @@ import QuoteForm from './components/QuoteForm';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 
+import ForPainters from './components/ForPainters';
+
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'services' | 'quote' | 'faq' | 'contact'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact'>('home');
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function App() {
     return () => io.disconnect();
   }, [currentPage]);
 
-  const navigateTo = (page: 'home' | 'services' | 'quote' | 'faq' | 'contact', sectionId?: string) => {
+  const navigateTo = (page: 'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact', sectionId?: string) => {
     setCurrentPage(page);
     setIsMenuOpen(false);
     
@@ -83,16 +85,16 @@ export default function App() {
           {[
             { id: 'home', label: 'Home' },
             { id: 'services', label: 'Services' },
-            { id: 'home', label: 'For Painters', section: 'how' },
+            { id: 'painters', label: 'For Painters' },
             { id: 'faq', label: 'FAQ' },
             { id: 'contact', label: 'Contact' }
           ].map((link, index) => (
             <li key={`${link.id}-${index}`}>
               <a 
-                onClick={() => navigateTo(link.id as 'home' | 'services' | 'quote' | 'faq' | 'contact', link.section)} 
+                onClick={() => navigateTo(link.id as 'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact')} 
                 className={`no-underline text-[14.5px] transition-all duration-300 cursor-pointer font-medium px-4 py-2 rounded-full ${
-                  (currentPage === link.id && (!link.section || link.section === 'home'))
-                    ? ((isScrolled || currentPage === 'faq') ? 'bg-[#C9962A]/10 text-[#C9962A]' : 'bg-black/20 text-white')
+                  currentPage === link.id
+                    ? ((isScrolled || currentPage === 'faq') ? 'bg-[#C9962A]/10 text-[#C9962A]' : 'bg-white/20 text-white')
                     : `${(isScrolled || currentPage === 'faq') ? 'text-[#4A3B28]/80' : 'text-white/80'} hover:bg-[#C9962A]/10 hover:text-[#C9962A]`
                 }`}
               >
@@ -156,8 +158,12 @@ export default function App() {
               </li>
               <li>
                 <a 
-                  onClick={() => navigateTo('home', 'how')} 
-                  className="block p-3.5 text-[#4A3B28] font-medium cursor-pointer hover:bg-[#C9962A]/10 rounded-xl transition-all"
+                  onClick={() => navigateTo('painters')} 
+                  className={`block p-3.5 rounded-xl font-semibold cursor-pointer transition-all ${
+                    currentPage === 'painters' 
+                      ? 'bg-[#C9962A] text-white shadow-sm' 
+                      : 'text-[#4A3B28] hover:bg-[#C9962A]/10'
+                  }`}
                 >
                   For Painters
                 </a>
@@ -200,6 +206,8 @@ export default function App() {
           <Home onNavigate={navigateTo} />
         ) : currentPage === 'services' ? (
           <Services onNavigate={navigateTo} />
+        ) : currentPage === 'painters' ? (
+          <ForPainters onNavigate={navigateTo} />
         ) : currentPage === 'faq' ? (
           <FAQ onNavigate={navigateTo} />
         ) : currentPage === 'contact' ? (
@@ -240,9 +248,9 @@ export default function App() {
           <div>
             <div className="text-[13px] font-semibold text-white mb-[18px]">For Painters</div>
             <ul className="list-none flex flex-col gap-2.5 p-0">
-              <li><a onClick={() => navigateTo('home', 'how')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Join the Network</a></li>
-              <li><a onClick={() => navigateTo('home', 'how')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Painter Plans</a></li>
-              <li><a href="#" className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Painter Dashboard</a></li>
+              <li><a onClick={() => navigateTo('painters')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Join the Network</a></li>
+              <li><a onClick={() => navigateTo('painters')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Painter Plans</a></li>
+              <li><a onClick={() => navigateTo('painters')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Painter Dashboard</a></li>
               <li><a onClick={() => navigateTo('contact')} className="no-underline text-[13px] text-white/55 transition-colors hover:text-gold-light cursor-pointer">Contact Us</a></li>
             </ul>
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Home as HomeIcon, Building2, Store, Warehouse, Fence, Sparkles } from 'lucide-react';
 
 interface HomeProps {
-  onNavigate: (page: 'home' | 'services' | 'quote', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'painters' | 'quote' | 'faq' | 'contact', sectionId?: string) => void;
 }
 
 export default function Home({ onNavigate }: HomeProps) {
