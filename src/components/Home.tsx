@@ -204,7 +204,7 @@ export default function Home({ onNavigate }: HomeProps) {
         <div className="text-center">
           <button 
             onClick={() => onNavigate('services')}
-            className="btn-outline-gold inline-flex items-center gap-2 bg-transparent text-gold border-[1.5px] border-gold rounded-lg px-[30px] py-[13px] text-sm font-medium transition-all hover:bg-gold hover:text-white"
+            className="btn-outline-gold inline-flex items-center gap-2 bg-transparent text-gold border-[1.5px] border-gold rounded-lg px-[30px] py-[13px] text-sm font-medium transition-all hover:bg-gold hover:text-white cursor-pointer"
           >
             View All Services →
           </button>

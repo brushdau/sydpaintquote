@@ -1,350 +1,260 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Check, ArrowRight, ArrowLeft, Paintbrush, Home as HomeIcon, Building2, MapPin, User, Mail, Phone, MessageSquare } from 'lucide-react';
+import { useState, useEffect, FormEvent } from 'react';
+import { motion } from 'motion/react';
+import { Check, ShieldCheck, Tag, XCircle, FileText, ChevronDown } from 'lucide-react';
 
 interface QuoteFormProps {
-  onNavigate: (page: 'home' | 'services' | 'quote', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'services' | 'quote' | 'faq' | 'contact', sectionId?: string) => void;
 }
 
-type Step = 'service' | 'property' | 'details' | 'contact' | 'success';
-
 export default function QuoteForm({ onNavigate }: QuoteFormProps) {
-  const [step, setStep] = useState<Step>('service');
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [formData, setFormData] = useState({
-    serviceType: '',
-    propertyType: '',
-    suburb: '',
-    description: '',
-    name: '',
+    fullName: '',
     email: '',
     phone: '',
+    serviceType: '',
+    propertyType: '',
+    propertySize: '',
+    numberOfRooms: '',
+    suburb: '',
+    additionalDetails: ''
   });
 
-  const updateFormData = (data: Partial<typeof formData>) => {
-    setFormData(prev => ({ ...prev, ...data }));
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log('Quote request submitted:', formData);
+    setIsSubmitted(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const nextStep = (currentStep: Step) => {
-    if (currentStep === 'service') setStep('property');
-    if (currentStep === 'property') setStep('details');
-    if (currentStep === 'details') setStep('contact');
-    if (currentStep === 'contact') setStep('success');
-  };
-
-  const prevStep = (currentStep: Step) => {
-    if (currentStep === 'property') setStep('service');
-    if (currentStep === 'details') setStep('property');
-    if (currentStep === 'contact') setStep('details');
-  };
-
-  const serviceTypes = [
-    { id: 'interior', label: 'Interior Painting', icon: <Paintbrush className="w-5 h-5" /> },
-    { id: 'exterior', label: 'Exterior Painting', icon: <HomeIcon className="w-5 h-5" /> },
-    { id: 'commercial', label: 'Commercial Painting', icon: <Building2 className="w-5 h-5" /> },
-    { id: 'roof', label: 'Roof Painting', icon: <span className="text-xl">🏠</span> },
-    { id: 'deck', label: 'Deck & Fence', icon: <span className="text-xl">🌿</span> },
-    { id: 'new', label: 'New Home', icon: <span className="text-xl">🔑</span> },
-  ];
-
-  const propertyTypes = [
-    { id: 'house', label: 'House', icon: <HomeIcon className="w-5 h-5" /> },
-    { id: 'apartment', label: 'Apartment / Unit', icon: <Building2 className="w-5 h-5" /> },
-    { id: 'commercial', label: 'Commercial / Office', icon: <Building2 className="w-5 h-5" /> },
-    { id: 'other', label: 'Other', icon: <span className="text-xl">🏢</span> },
-  ];
-
-  const renderStep = () => {
-    switch (step) {
-      case 'service':
-        return (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-[#FDFCF9] flex items-center justify-center px-6 py-20">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="max-w-md w-full text-center bg-white p-10 rounded-3xl border border-[#E5E1D8] shadow-xl shadow-[#C9962A]/5"
+        >
+          <div className="w-20 h-20 bg-[#C9962A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-[#C9962A]/20">
+            <Check className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-4">Request Received!</h2>
+          <p className="text-[#7A6B54] mb-10 leading-relaxed">
+            Thank you, {formData.fullName.split(' ')[0]}! We've received your request. Up to 3 vetted Sydney painters will be in touch shortly with their best quotes.
+          </p>
+          <button 
+            onClick={() => onNavigate('home')}
+            className="w-full bg-[#C9962A] text-white py-4 rounded-xl font-bold hover:bg-[#A07A1E] transition-all cursor-pointer"
           >
-            <div className="text-center mb-8">
-              <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-2">What do you need painted?</h2>
-              <p className="text-[#7A6B54]">Select the primary service type for your project.</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {serviceTypes.map((type) => (
-                <button
-                  key={type.id}
-                  onClick={() => {
-                    updateFormData({ serviceType: type.label });
-                    nextStep('service');
-                  }}
-                  className={`flex items-center gap-4 p-5 rounded-xl border-2 transition-all text-left ${
-                    formData.serviceType === type.label 
-                      ? 'border-[#C9962A] bg-[#C9962A]/5' 
-                      : 'border-gold/10 bg-white hover:border-[#C9962A]/30'
-                  }`}
-                >
-                  <div className="w-10 h-10 bg-[#C9962A]/10 rounded-lg flex items-center justify-center text-[#C9962A]">
-                    {type.icon}
-                  </div>
-                  <span className="font-bold text-[#1A1208]">{type.label}</span>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        );
-
-      case 'property':
-        return (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-2">Property Type</h2>
-              <p className="text-[#7A6B54]">What kind of property are we looking at?</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {propertyTypes.map((type) => (
-                <button
-                  key={type.id}
-                  onClick={() => {
-                    updateFormData({ propertyType: type.label });
-                    nextStep('property');
-                  }}
-                  className={`flex items-center gap-4 p-5 rounded-xl border-2 transition-all text-left ${
-                    formData.propertyType === type.label 
-                      ? 'border-[#C9962A] bg-[#C9962A]/5' 
-                      : 'border-gold/10 bg-white hover:border-[#C9962A]/30'
-                  }`}
-                >
-                  <div className="w-10 h-10 bg-[#C9962A]/10 rounded-lg flex items-center justify-center text-[#C9962A]">
-                    {type.icon}
-                  </div>
-                  <span className="font-bold text-[#1A1208]">{type.label}</span>
-                </button>
-              ))}
-            </div>
-            <button 
-              onClick={() => prevStep('property')}
-              className="flex items-center gap-2 text-[#7A6B54] hover:text-[#1A1208] transition-colors mt-4"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          </motion.div>
-        );
-
-      case 'details':
-        return (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-2">Project Details</h2>
-              <p className="text-[#7A6B54]">Where is the job and what needs to be done?</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-[#1A1208] mb-2">Suburb in Sydney</label>
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A6B54]" />
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Bondi, Parramatta, Surry Hills"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/10 focus:border-[#C9962A] outline-none transition-all bg-white"
-                    value={formData.suburb}
-                    onChange={(e) => updateFormData({ suburb: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-[#1A1208] mb-2">Brief Description (Optional)</label>
-                <div className="relative">
-                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-[#7A6B54]" />
-                  <textarea 
-                    placeholder="Tell us a bit more about the job..."
-                    rows={4}
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/10 focus:border-[#C9962A] outline-none transition-all bg-white resize-none"
-                    value={formData.description}
-                    onChange={(e) => updateFormData({ description: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-between mt-8">
-              <button 
-                onClick={() => prevStep('details')}
-                className="flex items-center gap-2 text-[#7A6B54] hover:text-[#1A1208] transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" /> Back
-              </button>
-              <button 
-                disabled={!formData.suburb}
-                onClick={() => nextStep('details')}
-                className="btn-gold px-8 py-4 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next Step <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </motion.div>
-        );
-
-      case 'contact':
-        return (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
-          >
-            <div className="text-center mb-8">
-              <h2 className="font-playfair text-3xl font-bold text-[#1A1208] mb-2">Final Step</h2>
-              <p className="text-[#7A6B54]">Where should we send your quotes?</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-[#1A1208] mb-2">Full Name</label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A6B54]" />
-                  <input 
-                    type="text" 
-                    placeholder="Your Name"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/10 focus:border-[#C9962A] outline-none transition-all bg-white"
-                    value={formData.name}
-                    onChange={(e) => updateFormData({ name: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-[#1A1208] mb-2">Email Address</label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A6B54]" />
-                    <input 
-                      type="email" 
-                      placeholder="email@example.com"
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/10 focus:border-[#C9962A] outline-none transition-all bg-white"
-                      value={formData.email}
-                      onChange={(e) => updateFormData({ email: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-[#1A1208] mb-2">Phone Number</label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A6B54]" />
-                    <input 
-                      type="tel" 
-                      placeholder="0400 000 000"
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/10 focus:border-[#C9962A] outline-none transition-all bg-white"
-                      value={formData.phone}
-                      onChange={(e) => updateFormData({ phone: e.target.value })}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-between mt-8">
-              <button 
-                onClick={() => prevStep('contact')}
-                className="flex items-center gap-2 text-[#7A6B54] hover:text-[#1A1208] transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" /> Back
-              </button>
-              <button 
-                disabled={!formData.name || !formData.email || !formData.phone}
-                onClick={() => nextStep('contact')}
-                className="btn-gold px-8 py-4 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Get Free Quotes <Check className="w-4 h-4" />
-              </button>
-            </div>
-          </motion.div>
-        );
-
-      case 'success':
-        return (
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="text-center py-12"
-          >
-            <div className="w-20 h-20 bg-[#C9962A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-[#C9962A]/20">
-              <Check className="w-10 h-10 text-white" />
-            </div>
-            <h2 className="font-playfair text-4xl font-bold text-[#1A1208] mb-4">Success! Your Request is In</h2>
-            <p className="text-[#7A6B54] text-lg max-w-md mx-auto mb-10">
-              Thanks, {formData.name.split(' ')[0]}! We've received your request for {formData.serviceType.toLowerCase()} in {formData.suburb}. 
-              Up to 3 vetted Sydney painters will be in touch shortly with their best quotes.
-            </p>
-            <button 
-              onClick={() => onNavigate('home')}
-              className="btn-gold px-10 py-4 rounded-xl font-bold"
-            >
-              Back to Home
-            </button>
-          </motion.div>
-        );
-    }
-  };
+            Back to Home
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] pt-[100px] pb-24 px-6">
-      <div className="max-w-3xl mx-auto">
-        {/* Progress Bar */}
-        {step !== 'success' && (
-          <div className="mb-12">
-            <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase text-[#7A6B54] mb-3">
-              <span>Service</span>
-              <span>Property</span>
-              <span>Details</span>
-              <span>Contact</span>
-            </div>
-            <div className="h-1.5 bg-gold/10 rounded-full overflow-hidden">
-              <motion.div 
-                className="h-full bg-[#C9962A]"
-                initial={{ width: '0%' }}
-                animate={{ 
-                  width: step === 'service' ? '25%' : 
-                         step === 'property' ? '50%' : 
-                         step === 'details' ? '75%' : '100%' 
-                }}
-              />
-            </div>
+    <div className="bg-[#FDFCF9] min-h-screen">
+      {/* HERO SECTION */}
+      <section className="bg-[#1A1A1A] pt-32 pb-20 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-6">
+            <span className="text-white/40">📋</span>
+            <span className="text-white/80 text-[10px] font-bold tracking-[0.15em] uppercase">FREE QUOTE REQUEST</span>
           </div>
-        )}
-
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-gold/5 border border-gold/10">
-          <AnimatePresence mode="wait">
-            {renderStep()}
-          </AnimatePresence>
+          <h1 className="font-playfair text-4xl md:text-6xl font-bold text-white mb-6">Get Your Free Painting Quote</h1>
+          <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+            Fill in the form below and we'll match you with up to 3 vetted Sydney painters. It only takes 2 minutes.
+          </p>
         </div>
+      </section>
 
-        {step !== 'success' && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-center gap-3 text-[#7A6B54]">
-              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-[#C9962A] shrink-0">
-                <Check className="w-4 h-4" />
+      {/* FORM SECTION */}
+      <section className="py-16 px-6 md:px-12 -mt-10">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white border border-[#E5E1D8] rounded-3xl shadow-xl shadow-[#C9962A]/5 overflow-hidden">
+            <div className="p-8 md:p-10 border-b border-[#F5F0E8] bg-[#F5F0E8]/50 flex items-start gap-4">
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#C9962A] shrink-0 shadow-sm">
+                <FileText size={20} />
               </div>
-              <span className="text-xs font-medium">100% Free & No Obligation</span>
+              <div>
+                <h2 className="font-playfair text-xl font-bold text-[#1A1208]">Your Project Details</h2>
+                <p className="text-xs text-[#7A6B54] mt-1">All fields marked with * are required</p>
+              </div>
             </div>
-            <div className="flex items-center gap-3 text-[#7A6B54]">
-              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-[#C9962A] shrink-0">
-                <Check className="w-4 h-4" />
+
+            <form onSubmit={handleSubmit} className="p-8 md:p-10 space-y-10">
+              {/* CONTACT DETAILS */}
+              <div className="space-y-6">
+                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#C9962A]">YOUR CONTACT DETAILS</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Full Name *</label>
+                    <input 
+                      type="text" required placeholder="e.g. Sarah Mitchell"
+                      className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Email Address *</label>
+                    <input 
+                      type="email" required placeholder="you@example.com"
+                      className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1A1208]">Phone Number *</label>
+                  <input 
+                    type="tel" required placeholder="e.g. 0412 345 678"
+                    className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
               </div>
-              <span className="text-xs font-medium">Vetted Local Sydney Painters</span>
+
+              {/* PAINTING JOB */}
+              <div className="space-y-6">
+                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#C9962A]">YOUR PAINTING JOB</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Service Type *</label>
+                    <div className="relative">
+                      <select 
+                        required className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors appearance-none pr-12 cursor-pointer"
+                        value={formData.serviceType}
+                        onChange={(e) => setFormData({...formData, serviceType: e.target.value})}
+                      >
+                        <option value="">Select service...</option>
+                        <option>Interior Painting</option>
+                        <option>Exterior Painting</option>
+                        <option>Full House (Int & Ext)</option>
+                        <option>Commercial Painting</option>
+                        <option>Roof Painting</option>
+                        <option>Deck & Fence</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7A6B54] pointer-events-none" size={18} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Property Type *</label>
+                    <div className="relative">
+                      <select 
+                        required className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors appearance-none pr-12 cursor-pointer"
+                        value={formData.propertyType}
+                        onChange={(e) => setFormData({...formData, propertyType: e.target.value})}
+                      >
+                        <option value="">Select type...</option>
+                        <option>House</option>
+                        <option>Apartment / Unit</option>
+                        <option>Townhouse</option>
+                        <option>Commercial / Office</option>
+                        <option>Other</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7A6B54] pointer-events-none" size={18} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Property Size *</label>
+                    <div className="relative">
+                      <select 
+                        required className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors appearance-none pr-12 cursor-pointer"
+                        value={formData.propertySize}
+                        onChange={(e) => setFormData({...formData, propertySize: e.target.value})}
+                      >
+                        <option value="">Select size...</option>
+                        <option>Small (1-2 rooms)</option>
+                        <option>Medium (3-4 rooms)</option>
+                        <option>Large (5+ rooms)</option>
+                        <option>Whole Property</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7A6B54] pointer-events-none" size={18} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#1A1208]">Number of Rooms</label>
+                    <input 
+                      type="text" placeholder="e.g. 4"
+                      className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors"
+                      value={formData.numberOfRooms}
+                      onChange={(e) => setFormData({...formData, numberOfRooms: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1A1208]">Your Suburb *</label>
+                  <div className="relative">
+                    <select 
+                      required className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors appearance-none pr-12 cursor-pointer"
+                      value={formData.suburb}
+                      onChange={(e) => setFormData({...formData, suburb: e.target.value})}
+                    >
+                      <option value="">Select suburb...</option>
+                      <option>Bondi</option>
+                      <option>Parramatta</option>
+                      <option>Surry Hills</option>
+                      <option>Manly</option>
+                      <option>Cronulla</option>
+                      <option>Other Sydney Suburb</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7A6B54] pointer-events-none" size={18} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-[#1A1208]">Additional Details</label>
+                  <textarea 
+                    placeholder="e.g. Walls need sanding first, specific colour in mind, access issues, etc. (max 500 characters)"
+                    rows={4} maxLength={500}
+                    className="w-full px-5 py-3.5 bg-[#FDFCF9] border border-[#E5E1D8] rounded-xl focus:outline-none focus:border-[#C9962A] transition-colors resize-none"
+                    value={formData.additionalDetails}
+                    onChange={(e) => setFormData({...formData, additionalDetails: e.target.value})}
+                  ></textarea>
+                  <div className="text-right text-[10px] text-[#7A6B54]">{formData.additionalDetails.length}/500</div>
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-4">
+                <button 
+                  type="submit"
+                  className="w-full bg-[#C9962A] text-white py-4 rounded-xl font-bold hover:bg-[#A07A1E] transition-all shadow-lg shadow-[#C9962A]/20 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  Submit Free Quote Request <span className="text-xl">→</span>
+                </button>
+                <p className="text-center text-[11px] text-[#7A6B54]">
+                  By submitting this form, you agree to our <a href="#" className="underline">Terms of Service</a> and <a href="#" className="underline">Privacy Policy</a>.
+                </p>
+              </div>
+            </form>
+          </div>
+
+          {/* TRUST BADGES */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
+            <div className="bg-white border border-[#E5E1D8] rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+              <ShieldCheck className="text-[#C9962A]" size={24} />
+              <span className="text-xs font-medium text-[#1A1208]">Your data is safe & secure</span>
             </div>
-            <div className="flex items-center gap-3 text-[#7A6B54]">
-              <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-[#C9962A] shrink-0">
-                <Check className="w-4 h-4" />
-              </div>
-              <span className="text-xs font-medium">Average Response &lt; 2 Hours</span>
+            <div className="bg-white border border-[#E5E1D8] rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+              <Tag className="text-[#C9962A]" size={24} />
+              <span className="text-xs font-medium text-[#1A1208]">100% free, no hidden fees</span>
+            </div>
+            <div className="bg-white border border-[#E5E1D8] rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+              <XCircle className="text-[#C9962A]" size={24} />
+              <span className="text-xs font-medium text-[#1A1208]">No obligation to accept</span>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

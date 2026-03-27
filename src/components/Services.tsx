@@ -83,7 +83,7 @@ export default function Services({ onNavigate }: ServicesProps) {
     {
       title: "Commercial Painting",
       text: "Minimal disruption, maximum results. Our commercial painters work around your schedule to deliver high-quality finishes for any business space.",
-      img: "/commecial.jpg",
+      img: "/lift.jpg",
       icon: <span className="text-2xl">🏢</span>,
       subServices: [
         {
@@ -256,7 +256,7 @@ export default function Services({ onNavigate }: ServicesProps) {
           </p>
           <button 
             onClick={() => onNavigate('quote')}
-            className="btn-gold px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest aos"
+            className="btn-gold px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest aos cursor-pointer"
             style={{ transitionDelay: '0.3s' }}
           >
             Get a Free Quote for Any Service →
@@ -350,7 +350,7 @@ export default function Services({ onNavigate }: ServicesProps) {
 
           <button 
             onClick={() => onNavigate('quote')}
-            className="btn-gold px-12 py-5 rounded-lg font-bold text-lg inline-flex items-center gap-2"
+            className="btn-gold px-12 py-5 rounded-lg font-bold text-lg inline-flex items-center gap-2 cursor-pointer"
           >
             Get Free Quotes in Your Area →
           </button>
